@@ -1,7 +1,9 @@
+#!/usr/bin/env bash
+set -e
+
+#git clone git@github.com:kdw4537/workspace.git
+
 . ./config.sh
-
-git clone git@github.com:kdw4537/workspace.git
-
 # docker run -v{volume} {host volume path}:/{docker volume path}
 docker run -it \
 	--privileged \

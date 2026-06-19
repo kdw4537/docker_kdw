@@ -70,3 +70,19 @@ RUN conda update -n base -c defaults conda
 RUN pip install --upgrade pip
 
 CMD [ "/bin/bash" ]
+
+#sshd port setting
+RUN apt-get update && apt-get install -y openssh-server && rm -rf /var/lib/apt/lists/*
+
+RUN cat >> /etc/ssh/sshd_config <<'EOF'
+PermitRootLogin yes
+PasswordAuthentication yes
+PubkeyAuthentication yes
+Port 4537
+EOF
+
+RUN mkdir -p /run/sshd
+
+EXPOSE 4537
+
+CMD ["/usr/sbin/sshd", "-D", "-e", "-p", "4537"]
