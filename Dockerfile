@@ -1,14 +1,31 @@
 # Dockerfile
-
 FROM ubuntu:22.04
+
+ARG USERNAME
+ARG USER_UID
+ARG USER_GID
+
+RUN test -n "$USERNAME" && test -n "$USER_UID" && test -n "$USER_GID"
+
+# update package
+RUN apt-get update -y
+RUN apt-get install -y --no-install-recommends sudo
+
+# adduser
+RUN if ! getent group ${USER_GID} > /dev/null; then \
+        groupadd -g ${USER_GID} ${USERNAME}; \
+    fi && \
+    if ! id -u ${USERNAME} > /dev/null 2>&1; then \
+        useradd -m -u ${USER_UID} -g ${USER_GID} -s /bin/bash ${USERNAME}; \
+    fi && \
+    usermod -aG sudo ${USERNAME} && \
+    echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/${USERNAME} && \
+    chmod 0440 /etc/sudoers.d/${USERNAME}
 
 # Environment Variables
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 ENV PATH="$PATH:/opt/conda/bin"
-
-# update package
-RUN apt-get update -y
 
 # Install package dependencies
 RUN apt-get install -y --no-install-recommends \
@@ -54,21 +71,33 @@ RUN apt-get install -y --no-install-recommends \
         subversion \
     	cmake
 
-WORKDIR /root/workspace
+#WORKDIR /root/workspace
+WORKDIR /home/kdw4537
 
-# conda install
-RUN wget --quiet https://repo.anaconda.com/archive/Anaconda3-2023.07-1-Linux-x86_64.sh -O ~/anaconda.sh
-RUN /bin/bash ~/anaconda.sh -b -p /opt/conda
-RUN rm ~/anaconda.sh
-RUN ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh
-RUN echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc
+## conda install
+#RUN wget --quiet https://repo.anaconda.com/archive/Anaconda3-2023.07-1-Linux-x86_64.sh -O ~/anaconda.sh
+#RUN /bin/bash ~/anaconda.sh -b -p /opt/conda
+#RUN rm ~/anaconda.sh
+#RUN ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh
+#RUN echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc
+#RUN conda update -n base -c defaults conda
+
+# Miniconda latest install
+RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
+    /bin/bash /tmp/miniconda.sh -b -p /opt/conda && \
+    rm /tmp/miniconda.sh && \
+    /opt/conda/bin/conda clean -afy
+
+ENV PATH="/opt/conda/bin:${PATH}"
+
+RUN ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+    echo ". /opt/conda/etc/profile.d/conda.sh" >> /etc/bash.bashrc
 
 # update
-RUN conda update -n base -c defaults conda
 RUN pip install --upgrade pip
 
 #sshd port setting
-RUN apt-get update && apt-get install -y net-tools rsync ssh openssh-server && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends net-tools rsync ssh openssh-server && rm -rf /var/lib/apt/lists/*
 
 RUN cat >> /etc/ssh/sshd_config <<'EOF'
 PermitRootLogin yes
