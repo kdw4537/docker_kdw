@@ -68,7 +68,7 @@ RUN conda update -n base -c defaults conda
 RUN pip install --upgrade pip
 
 #sshd port setting
-RUN apt-get update && apt-get install -y ssh openssh-server && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y net-tools ssh openssh-server && rm -rf /var/lib/apt/lists/*
 
 RUN cat >> /etc/ssh/sshd_config <<'EOF'
 PermitRootLogin yes
