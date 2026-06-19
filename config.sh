@@ -1,3 +1,4 @@
+HOME_PATH="/home/kdw4537"
 CUR_PATH=$(pwd)
 VOLUME_NAME="workspace"
 VOLUME_PATH=${CUR_PATH}/${VOLUME_NAME}

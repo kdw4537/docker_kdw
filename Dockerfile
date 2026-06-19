@@ -46,8 +46,6 @@ RUN apt-get install -y --no-install-recommends \
         vim \
         tmux \
         git \
-        ssh \
-        openssh-server \
         libxrender-dev \
         bzip2 \
         libxext6 \
@@ -69,10 +67,8 @@ RUN echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc
 RUN conda update -n base -c defaults conda
 RUN pip install --upgrade pip
 
-CMD [ "/bin/bash" ]
-
 #sshd port setting
-RUN apt-get update && apt-get install -y openssh-server && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y ssh openssh-server && rm -rf /var/lib/apt/lists/*
 
 RUN cat >> /etc/ssh/sshd_config <<'EOF'
 PermitRootLogin yes
