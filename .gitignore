@@ -1,0 +1,9 @@
+# Ignore everything except the files kept in kdw4537/workspace.
+/*
+
+!/.gitignore
+!/Dockerfile
+!/build_docker.sh
+!/config.sh
+!/exec_docker.sh
+!/run_docker.sh

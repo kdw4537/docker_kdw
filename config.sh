@@ -1,0 +1,9 @@
+CUR_PATH=$(pwd)
+VOLUME_NAME="workspace"
+VOLUME_PATH=${CUR_PATH}/${VOLUME_NAME}
+IMAGE_NAME="image_kdw"
+IMAGE_TAG="ubuntu-22.04"
+DOCKER_NAME="docker_kdw2"
+#CUDA_VER=11.8.0
+#CUDA_VER=12.1.1
+CUDA_VER=12.2
