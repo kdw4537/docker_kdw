@@ -14,7 +14,7 @@ docker run -dit \
     -e TZ=Asia/Seoul \
     -v ${VOLUME_PATH}:/home/${HOST_USER}/${VOLUME_NAME} \
     -v ${HOME_PATH}/.ssh:/home/${HOST_USER}/.ssh \
-    -v /raid:/home/${HOST_USER}/raid \
+    -v /raid:/raid \
     --mount type=bind,source=/etc/ssh/ssh_host_ed25519_key,target=/etc/ssh/ssh_host_ed25519_key,readonly \
     --mount type=bind,source=/etc/ssh/ssh_host_ed25519_key.pub,target=/etc/ssh/ssh_host_ed25519_key.pub,readonly \
     --mount type=bind,source=/etc/ssh/ssh_host_rsa_key,target=/etc/ssh/ssh_host_rsa_key,readonly \
