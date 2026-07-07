@@ -1,5 +1,6 @@
 # Dockerfile
-FROM ubuntu:22.04
+#FROM ubuntu:22.04
+FROM nvidia/cuda:12.8.0-devel-ubuntu22.04
 
 ARG USERNAME
 ARG USER_UID
@@ -72,7 +73,7 @@ RUN apt-get install -y --no-install-recommends \
     	cmake
 
 #WORKDIR /root/workspace
-WORKDIR /home/kdw4537
+WORKDIR /home/kdw4537/workspace
 
 ## conda install
 #RUN wget --quiet https://repo.anaconda.com/archive/Anaconda3-2023.07-1-Linux-x86_64.sh -O ~/anaconda.sh
