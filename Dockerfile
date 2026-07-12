@@ -54,6 +54,8 @@ RUN apt-get install -y --no-install-recommends \
         libxkbfile1 \
         openssh-client \
         wget \
+        curl \
+        ca-certificates \
         xcb \
         xkb-data \
         build-essential
