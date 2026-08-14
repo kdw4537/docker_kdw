@@ -74,9 +74,6 @@ RUN apt-get install -y --no-install-recommends \
         subversion \
     	cmake
 
-#WORKDIR /root/workspace
-WORKDIR /home/${USERNAME}/workspace
-
 ## conda install
 #RUN wget --quiet https://repo.anaconda.com/archive/Anaconda3-2023.07-1-Linux-x86_64.sh -O ~/anaconda.sh
 #RUN /bin/bash ~/anaconda.sh -b -p /opt/conda
@@ -98,6 +95,29 @@ WORKDIR /home/${USERNAME}/workspace
 
 # update
 RUN pip install --upgrade pip
+
+# prerequisites
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    ca-certificates \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# --------------------------------------------------
+# Codex CLI
+# --------------------------------------------------
+USER ${USERNAME}
+WORKDIR /home/${USERNAME}
+
+RUN curl -fsSL https://chatgpt.com/codex/install.sh | sh
+
+# --------------------------------------------------
+# Claude Code
+# --------------------------------------------------
+RUN curl -fsSL https://claude.ai/install.sh | bash
+
+USER root
+WORKDIR /home/${USERNAME}/workspace
 
 #sshd port setting
 RUN apt-get update && apt-get install -y --no-install-recommends net-tools rsync ssh openssh-server && rm -rf /var/lib/apt/lists/*
