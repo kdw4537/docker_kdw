@@ -1,10 +1,11 @@
 # Dockerfile
-#FROM ubuntu:22.04
-FROM nvidia/cuda:12.8.0-devel-ubuntu22.04
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
 
 ARG USERNAME
 ARG USER_UID
 ARG USER_GID
+ARG PORT
 
 RUN test -n "$USERNAME" && test -n "$USER_UID" && test -n "$USER_GID"
 
@@ -26,7 +27,6 @@ RUN if ! getent group ${USER_GID} > /dev/null; then \
 # Environment Variables
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
-ENV PATH="$PATH:/opt/conda/bin"
 
 # Install package dependencies
 RUN apt-get install -y --no-install-recommends \
@@ -75,7 +75,7 @@ RUN apt-get install -y --no-install-recommends \
     	cmake
 
 #WORKDIR /root/workspace
-WORKDIR /home/kdw4537/workspace
+WORKDIR /home/${USERNAME}/workspace
 
 ## conda install
 #RUN wget --quiet https://repo.anaconda.com/archive/Anaconda3-2023.07-1-Linux-x86_64.sh -O ~/anaconda.sh
@@ -86,15 +86,15 @@ WORKDIR /home/kdw4537/workspace
 #RUN conda update -n base -c defaults conda
 
 # Miniconda latest install
-RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
-    /bin/bash /tmp/miniconda.sh -b -p /opt/conda && \
-    rm /tmp/miniconda.sh && \
-    /opt/conda/bin/conda clean -afy
-
-ENV PATH="/opt/conda/bin:${PATH}"
-
-RUN ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
-    echo ". /opt/conda/etc/profile.d/conda.sh" >> /etc/bash.bashrc
+#RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
+#    /bin/bash /tmp/miniconda.sh -b -p /opt/conda && \
+#    rm /tmp/miniconda.sh && \
+#    /opt/conda/bin/conda clean -afy
+#
+#ENV PATH="/opt/conda/bin:${PATH}"
+#
+#RUN ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+#    echo ". /opt/conda/etc/profile.d/conda.sh" >> /etc/bash.bashrc
 
 # update
 RUN pip install --upgrade pip
@@ -106,21 +106,14 @@ RUN cat >> /etc/ssh/sshd_config <<'EOF'
 PermitRootLogin yes
 PasswordAuthentication yes
 PubkeyAuthentication yes
-Port 4537
+AuthorizedKeysFile .ssh/authorized_keys
+Port ${PORT}
 EOF
 
 RUN mkdir -p /run/sshd
 
-EXPOSE 4537
+EXPOSE ${PORT}
 
-RUN cat >> /etc/ssh/sshd_config <<'EOF'
-Port 4537
-PermitRootLogin yes
-PasswordAuthentication yes
-PubkeyAuthentication yes
-StrictModes no
-AuthorizedKeysFile .ssh/authorized_keys
 EOF
 
-
-CMD ["/usr/sbin/sshd", "-D", "-e", "-p", "4537"]
+CMD ["/usr/sbin/sshd", "-D", "-e"]

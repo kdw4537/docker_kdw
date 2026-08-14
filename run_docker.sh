@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-#git clone git@github.com:kdw4537/workspace.git
-
 . ./config.sh
 
 # docker run -v{volume} {host volume path}:/{docker volume path}
@@ -14,11 +12,11 @@ docker run -dit \
     -e TZ=Asia/Seoul \
     -v ${VOLUME_PATH}:/home/${HOST_USER}/${VOLUME_NAME} \
     -v ${HOME_PATH}/.ssh:/home/${HOST_USER}/.ssh \
-    -v /raid:/raid \
+    -v ${SSD_VOLUME}:${SSD_VOLUME} \
     --mount type=bind,source=/etc/ssh/ssh_host_ed25519_key,target=/etc/ssh/ssh_host_ed25519_key,readonly \
     --mount type=bind,source=/etc/ssh/ssh_host_ed25519_key.pub,target=/etc/ssh/ssh_host_ed25519_key.pub,readonly \
     --mount type=bind,source=/etc/ssh/ssh_host_rsa_key,target=/etc/ssh/ssh_host_rsa_key,readonly \
     --mount type=bind,source=/etc/ssh/ssh_host_rsa_key.pub,target=/etc/ssh/ssh_host_rsa_key.pub,readonly \
-    -p 4537:4537 \
+    -p ${PORT}:${PORT} \
     ${IMAGE_NAME}:${IMAGE_TAG}
 
