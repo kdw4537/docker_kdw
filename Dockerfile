@@ -129,7 +129,7 @@ WORKDIR /home/${USERNAME}/workspace
 #sshd port setting
 RUN apt-get update && apt-get install -y --no-install-recommends net-tools rsync ssh openssh-server && rm -rf /var/lib/apt/lists/*
 
-RUN cat >> /etc/ssh/sshd_config <<'EOF'
+RUN cat >> /etc/ssh/sshd_config <<EOF
 PermitRootLogin yes
 PasswordAuthentication yes
 PubkeyAuthentication yes
