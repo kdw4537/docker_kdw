@@ -134,6 +134,4 @@ RUN mkdir -p /run/sshd
 
 EXPOSE ${PORT}
 
-EOF
-
 CMD ["/usr/sbin/sshd", "-D", "-e"]
