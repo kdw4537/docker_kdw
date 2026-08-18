@@ -25,8 +25,8 @@ DOCKER_NAME="docker_kdw"
 #CUDA_VER=11.8.0
 #CUDA_VER=12.1.1
 #CUDA_VER=12.2
-#BASE_IMAGE=ubuntu:22.04
-BASE_IMAGE=nvidia/cuda:12.8.0-devel-ubuntu22.04
+#BASE_IMAGE="ubuntu:22.04"
+BASE_IMAGE="nvidia/cuda:12.8.0-devel-ubuntu22.04"
 
 PORT=4537
 SSD_VOLUME="/raid"

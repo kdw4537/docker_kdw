@@ -93,8 +93,15 @@ RUN apt-get install -y --no-install-recommends \
 #RUN ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
 #    echo ". /opt/conda/etc/profile.d/conda.sh" >> /etc/bash.bashrc
 
-# update
-RUN pip install --upgrade pip
+# Python
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 \
+    python3-pip \
+    python3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# update pip
+RUN python3 -m pip install --upgrade pip
 
 # prerequisites
 RUN apt-get update && apt-get install -y --no-install-recommends \
